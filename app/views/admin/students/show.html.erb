@@ -1,0 +1,28 @@
+<h2>Update student list</h2>
+<figure class="figure">
+  <img class="figure-img img-thumbnail" src="/img/student_export.png" />
+  <figcaption class="figure-caption">
+    Schoolspeak export settings - Export this report as CSV and upload below
+    <a href="https://adla.schoolspeak.com/Secure/ReportBuilderView.aspx?Community=93030001&ReportId=3" target="schoolspeak">
+      The report in SchoolSpeak
+    </a>
+  </figcaption>
+</figure>
+
+<div class="form-group">
+  <h2>Upload</h2>
+  <%= form_tag admin_students_url, class: :row, multipart: true do %>
+    <div class="col-sm-4">
+      <%= file_field_tag( :roster, accept: 'text/csv', class: 'form-control' ) %>
+    </div>
+    <div class="col-sm-4">
+      <button class="btn btn-primary" type="submit">Upload</button>
+    </div>
+  <% end %>
+</div>
+
+
+<% content_for :css do %>
+  <style>
+  </style>
+<% end %>

@@ -1,0 +1,40 @@
+<h2>Daycare check in</h2>
+<h3>Grade <%= params[:grade] %></h3>
+
+<%= form_tag daycare_checkin_grade_url( params[:id] ), method: :put do %>
+  <div id="student_check_list" class="form-group">
+    <% @students.each do |student| %>
+      <input type="checkbox"
+              name="student[id][]"
+              id="student_id_<%= student.id %>"
+              value="<%= student.id %>"
+              <% if @checked_in.include?( student.id ) %>
+                data-id="<%= student.id %>"
+                checked="checked"
+                class="checked_in"
+              <% end %>
+              />
+      <label for="student_id_<%= student.id %>" class="btn btn-outline-success"><%= student.full_name %></label>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary" value="Check-in & next grade" />
+  </div>
+<% end %>
+
+
+<% content_for :js do  %>
+  <script>
+    $( '.checked_in' ).on( 'click', function(){
+      var $this = $( this ),
+          id = $this.data( 'id' )
+      $.ajax({
+        method: 'delete',
+        url: location.href,
+        data: { student_id: id }
+      })
+      $this.removeClass( 'checked_in' );
+    })
+  </script>
+<% end %>

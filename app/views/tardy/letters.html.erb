@@ -1,0 +1,27 @@
+<a class="btn btn-success" href="/" id="home">Home</a>
+<h3>Student Tardy Sign In Log</h3>
+<h3>Grade <%= params[:grade] %></h3>
+<h4>Select first letter of last name</h4>
+<div id="letters">
+  <% @letters.each do |letter| %>
+    <a class="btn btn-primary" href="/tardy/<%= params[:grade] %>/<%= letter.letter.downcase %>"><%= letter.letter.upcase %></a>
+  <% end %>
+</div>
+
+<% content_for :css do %>
+  <style>
+    #letters {
+      display: grid;
+      grid-gap: 30px;
+      grid-template-columns: repeat( 4, 1fr );
+      grid-template-rows: repeat( 6, 1fr );
+      grid-auto-flow: row;
+      height: 100vh;
+      width: 100%;
+    }
+    #letters a {
+      font-size: 4em;
+      white-space: normal;
+    }
+  </style>
+<% end %>

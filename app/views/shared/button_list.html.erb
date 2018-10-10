@@ -1,0 +1,21 @@
+<h2>
+  <%= @page_header %>
+  <% if @create_link.present? %>
+    <a href="<%= @create_link %>"><i class="far fa-xs fa-plus-square text-success"></i></a>
+  <% end %>
+</h2>
+
+<ul id="buttons">
+  <% if @sections.empty? %>
+    <li><em>No records found</em></li>
+  <% end %>
+  <% @sections.each do |f| %>
+    <li>
+      <% if f[:enabled] %>
+        <a class="" href="<%= f[:url] %>"><%= f[:name] %></a>
+      <% else %>
+        <span class=""><%= f[:name] %></span>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

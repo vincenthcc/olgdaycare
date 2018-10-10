@@ -1,0 +1,55 @@
+<h2>Daycare checkout</h2>
+
+<% multiple_families = false %>
+<%= form_tag daycare_checkout_url, method: :put do %>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Check in time</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="student_check_list">
+      <% @entries.each_with_index do |entry, i| %>
+        <tr>
+          <td>
+            <%= entry.student.list_name %>
+            <input type="hidden" name="entry[<%= i %>][id]" id="dcco_<%= entry.id %>" value="<%= entry.id %>" />
+          </td>
+          <td><%= entry.checkin_time_display %></td>
+          <td>
+            <% if entry.student.families.length.zero? %>
+            <% elsif entry.student.families.length == 1 %>
+              <input type="hidden" name="entry[<%= i %>][family_id]" value="<%= entry.student.families.first.id %>" />
+            <% else %>
+              <% multiple_families = true %>
+              <select name="entry[<%= i %>][family_id]" class="form-control">
+                <option value="">Please choose a family</option>
+                <% entry.student.families.each do |family| %>
+                  <option value="<%= family.id %>"><%= family.last_name %>, <%= family.parents %></option>
+                <% end %>
+              </select>
+            <% end %>
+          </td>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="form-group">
+    <label for="">Please type your name here to check out your student:</label>
+    <input class="form-control" name="checked_out_by" id="checked_out_by" type="text" required="required" />
+  </div>
+
+  <input type="submit" id="checkout_btn" class="btn btn-primary" <% if multiple_families %>disabled="disabled"<% end %> value="Check out" />
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    $( '#checked_out_by' ).focus();
+
+    $( 'select' ).on( 'change', function(){
+      $( '#checkout_btn' ).prop( 'disabled', this.value == '' )
+    });
+  </script>
+<% end %>

@@ -1,0 +1,42 @@
+<h2>Verify record format</h2>
+<h3>Do these columns look correct?</h3>
+<table class="table table-hover table-condensed">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>First name</th>
+      <th>Middle name</th>
+      <th>Last name</th>
+      <th>Date of birth</th>
+      <th>Grade</th>
+      <th>Teacher</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @records[ 0..4 ].each do |rec| %>
+      <tr>
+        <td><%= rec[ 0 ] %></td>
+        <td><%= rec[ 1 ] %></td>
+        <td><%= rec[ 2 ] %></td>
+        <td><%= rec[ 3 ] %></td>
+        <td><%= rec[ 4 ] %></td>
+        <td><%= rec[ 5 ] %></td>
+        <td><%= rec[ 6 ] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= form_tag admin_students_url, method: :put do %>
+  <% @records.each_with_index do |rec, i| %>
+    <input type="hidden" name="student[<%= i %>][student_id]" value="<%= rec[0] %>" />
+    <input type="hidden" name="student[<%= i %>][first_name]" value="<%= rec[1] %>" />
+    <input type="hidden" name="student[<%= i %>][middle_name]" value="<%= rec[2] %>" />
+    <input type="hidden" name="student[<%= i %>][last_name]" value="<%= rec[3] %>" />
+    <input type="hidden" name="student[<%= i %>][dob]" value="<%= rec[4] %>" />
+    <input type="hidden" name="student[<%= i %>][grade]" value="<%= rec[5] %>" />
+    <input type="hidden" name="student[<%= i %>][teacher]" value="<%= rec[6] %>" />
+  <% end %>
+  <input type="submit" class="btn btn-success" value="Yes, update please" />
+  <a href="<%= admin_students_url %>" class="btn btn-danger">No, let me upload again!</a>
+<% end %>

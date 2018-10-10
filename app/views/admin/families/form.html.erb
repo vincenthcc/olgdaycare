@@ -1,0 +1,112 @@
+<% if Current.action == 'new' %>
+  <% form_url = admin_families_url %>
+<% else %>
+  <% form_url = admin_family_url( @family ) %>
+<% end %>
+<h2>
+  <%= Current.action.capitalize %> family
+</h2>
+
+<%= form_for @family, url: form_url do |f| %>
+  <div class="form-group">
+    <%= f.label :last_name %>
+    <%= f.text_field :last_name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :parents %>
+    <%= f.text_field :parents, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.text_field :email, class: 'form-control' %>
+  </div>
+
+  <%= hidden_field_tag( "family[student_ids][]", nil ) %>
+  <div class="form-group">
+    <table width="100%">
+      <tr>
+        <td width="45%">
+          <h3>Students not in any families</h3>
+          <select class="form-control" multiple="multiple" size="<%= [ 10, @family_no.length ].min %>">
+            <% @family_no.each do |student| %>
+              <option value="<%= student.student_id %>"><%= student.list_name %></option>
+            <% end %>
+          </select>
+          <h3>Students in any families</h3>
+          <select class="form-control" multiple="multiple" size="<%= [ 10, @family_yes.length ].min %>">
+            <% @family_yes.each do |student| %>
+              <option value="<%= student.student_id %>"><%= student.list_name %></option>
+            <% end %>
+          </select>
+        </td>
+        <td class="text-center" width="10%">
+          <button class="btn btn-link" id="student_add"><i class="far fa-arrow-alt-circle-right fa-2x"></i></button>
+        </td>
+        <td width="45%">
+          <h3>Students in family</h3>
+          <table class="table table-hover table-condensed">
+            <tbody id="family_student_list">
+              <% f.object.students.each do |student| %>
+                <tr>
+                  <td>
+                    <input type="hidden" id="student_<%= student.student_id %>" name="family[student_ids][]" value="<%= student.student_id %>" />
+                    <%= student.full_name %>
+                    <a href="#" class="del_row float-right"><i class="fas fa-trash text-danger"></i></a>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <% if Current.action == 'new' %>
+    <div class="btn-group">
+      <button class="btn btn-success" type="submit">Create family</button>
+      <button class="btn btn-success" name="another" type="submit">+ start another</button>
+    </div>
+  <% else %>
+    <button class="btn btn-primary" type="submit">Update family</button>
+    <a href="<%= admin_family_url( @family ) %>"
+       data-method="delete"
+       class="btn btn-danger float-right"
+       data-confirm-pop="Really delete the <%= @family.last_name %> family?"
+       data-confirm-btn="Yes, delete it!">Delete family</a>
+  <% end %>
+<% end %>
+
+<% content_for :css do %>
+  <style>
+    td:first-child,
+    td:last-child {
+      vertical-align: top;
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    $( '#student_add' ).on( 'click', function(){
+      $( 'option:selected' ).each( function(){
+        $( '#family_student_list' ).append(
+          '<tr><td>' +
+            '<input type="hidden" id="student_' + this.value + '" name="family[student_ids][]" value="' + this.value + '" />' +
+            this.text +
+            '<a href="#" class="del_row float-right"><i class="fas fa-trash text-danger"></i></a>' +
+          '</td></tr>'
+        );
+        $( this ).remove()
+      });
+      return false;
+    });
+
+    $( '#body' ).on( 'click', '.del_row', function(){
+      $( this ).parents( 'tr:first' ).remove()
+      return false;
+    })
+  </script>
+<% end %>

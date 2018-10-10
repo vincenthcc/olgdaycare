@@ -1,0 +1,26 @@
+<h2>Daycare totals</h2>
+
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Grade</th>
+      <th>Total hours</th>
+      <th class="text-right">Total $ due</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @students.each do |student| %>
+      <tr<% if ( @totals[ student.id ]  || 0 )< 0 %> class="table-success"<% end %>>
+        <td><a href="<%= daycare_admin_history_url( student.student_id ) %>"><%= student.list_name %></a></td>
+        <td><%= student.grade %></td>
+        <td><%= ( @totals[ student.id ] || 0 ).round( 2 ) %></td>
+        <td class="text-right">$<%= sprintf( "%0.2f", ( @totals[ student.id ] || 0 ) * Current.daycare_per_hour ) %></td>
+        <td width="1%">
+          <a href="<%= daycare_admin_payment_url( student.student_id ) %>" class="btn btn-primary">Record payment</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

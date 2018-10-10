@@ -1,0 +1,36 @@
+<h2>
+  Daycare entries
+  <div class="small">Most recently changed records at the top</div>
+</h2>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Check in date</th>
+      <th>Check in time</th>
+      <th>Check out time</th>
+      <th>Checked out by</th>
+      <th>Total time</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @entries.each do |entry| %>
+      <tr class="<% if ( entry.total_time || 0 ).negative? %>table-success<% end %>">
+        <td><%= entry.student.full_name %></td>
+        <td><%= entry.checkin_date %></td>
+        <td><%= entry.checkin_time_display %></td>
+        <td><%= entry.checkout_time_display %></td>
+        <td><%= entry.checked_out_by %></td>
+        <td><%= entry.total_time %></td>
+        <td width="1%"><a class="btn btn-primary" href="<%= edit_daycare_admin_entry_url( entry ) %>">Edit</a>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= page_entries_info @entries %>
+</div>
+<%= paginate @entries %>

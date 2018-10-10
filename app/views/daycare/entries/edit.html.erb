@@ -1,0 +1,84 @@
+<h2>
+  Daycare entry
+  <div class="small"></div>
+</h2>
+
+<%= form_for @entry, url: daycare_admin_entry_url( @entry ), method: :put do |f| %>
+  <div class="form-group row">
+    <%= f.label :student, class: 'col-md-2 col-form-label' %>
+    <div class="col-md-4">
+      <span class="form-control-plaintext"><%= @entry.student.full_name %></span>
+    </div>
+
+    <%= f.label :family, class: 'col-md-2 col-form-label' %>
+    <div class="col-md-4">
+      <% if @entry.family.present? %>
+        <%= @entry.family.last_name %>, <%= @entry.family.parents %>
+        <%= f.hidden_field :family %>
+      <% else %>
+        <em>From before tracking started</em>
+      <% end %>
+      <span class="form-control-plaintext"></span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-md-2 col-form-label" for="daycare_entry_teacher">Entry date</label>
+    <div class="col-md-10">
+      <%= @entry.checkin_date %>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="form-group row">
+    <label class="col-md-2 col-form-label" for="daycare_entry_teacher">Checked in by</label>
+    <div class="col-md-4">
+      <span class="form-control-plaintext">
+        <% if @entry.teacher.present? %>
+          <%= @entry.teacher.full_name %>
+        <% else %>
+          <em>From before tracking started</em>
+        <% end %>
+      </span>
+    </div>
+
+    <%= f.label :checkin_time, class: 'col-md-2 col-form-label' %>
+    <div class="col-md-2">
+      <input class="form-control" type="time" value="<%= @entry.checkin_time_input %>" name="daycare_entry[checkin_time]" id="daycare_entry_checkin_time" />
+    </div>
+
+    <div class="col-md-2 text-center">
+    <button class="btn btn-danger"
+            type="submit"
+            name="delete"
+            value="1"
+            data-confirm-pop="This will delete this record."
+            data-confirm-btn="Yes, delete it!">Undo check in</button>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="form-group row">
+    <%= f.label :checked_out_by, class: 'col-md-2 col-form-label' %>
+    <div class="col-md-4">
+      <%= f.text_field :checked_out_by, class: 'form-control' %>
+    </div>
+
+    <%= f.label :checkout_time, class: 'col-md-2 col-form-label' %>
+    <div class="col-md-2">
+      <input class="form-control" type="time" value="<%= @entry.checkout_time_input %>" name="daycare_entry[checkout_time]" id="daycare_entry_checkout_time" />
+    </div>
+
+    <% if @entry.checkout_time.present? %>
+      <div class="col-md-2 text-center">
+        <button class="btn btn-danger" type="submit" name="undo_checkout" value="1">Undo check out</button>
+      </div>
+    <% end %>
+  </div>
+
+  <hr />
+
+  <button class="btn btn-primary" type="submit">Save entry</button>
+<% end %>

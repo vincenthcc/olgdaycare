@@ -1,0 +1,44 @@
+<h2>Daycare check out</h2>
+
+<%= form_tag daycare_checkout_url do %>
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Check in time</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="student_check_list">
+      <% @entries.each do |entry| %>
+        <tr>
+          <td><%= entry.student.list_name %></td>
+          <td><%= entry.checkin_time_display %></td>
+          <td>
+            <input class="dc-chk" type="checkbox" name="id[]" id="dcco_<%= entry.id %>" value="<%= entry.id %>" />
+            <label class="btn btn-outline-success" for="dcco_<%= entry.id %>">Select</label>
+          </td>
+      <% end %>
+    </tbody>
+  </table>
+
+  <input type="submit" class="btn btn-primary" id="checkout" value="Check out" disabled="disabled" />
+<% end %>
+
+<% content_for :css do %>
+  <style>
+    #checkout {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+    }
+  </style>
+<% end %>
+
+<% content_for :js do %>
+  <script>
+    $( '.dc-chk' ).on( 'click', function(){
+      $( '#checkout' ).prop( 'disabled', $( '.dc-chk:checked' ).length == 0 );
+    })
+  </script>
+<% end %>

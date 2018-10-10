@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= @page_title %></title>
+    <%= csrf_meta_tags %>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha256-R91pD48xW+oHbpJYGn5xR0Q7tMhH4xOrWn1QqMRINtA=" crossorigin="anonymous" />
+    <%= stylesheet_link_tag "application" %>
+    <%= yield :css %>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-<%= Rails.env.production? ? 'olg' : 'danger' %>" id="header">
+      <a class="navbar-brand" href="/">
+        <img src="/img/header_logo.png" width="30" height="30" />
+        OLG Parish School
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-header-links" aria-controls="nav-header-links" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-between" id="nav-header-links">
+        <div class="navbar-nav ">
+          <a class="nav-item nav-link <%= Current.controller.match?( /^publics\/?/ ) ? 'active' : '' %>" href="<%= public_url %>">Public</a>
+          <% if user_signed_in? %>
+            <a class="nav-item nav-link <%= Current.controller.match?( /^daycare\// ) ? 'active' : '' %>" href="<%= daycare_url %>">Daycare</a>
+            <% if current_user.admin? %>
+              <a class="nav-item nav-link <%= Current.controller.match?( /^admin\// ) ? 'active' : '' %>" href="<%= admin_url %>">Admin</a>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="navbar-nav">
+          <% if user_signed_in? %>
+            <span class="navbar-text">[ <%= Current.user.full_name %> ]</span>
+            <a class="nav-item nav-link" data-method="delete" href="<%= u_logout_url %>">Log out</a>
+          <% else %>
+            <a class="nav-item nav-link" href="<%= u_saml_url %>">Log in</a>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+
+    <div id="body">
+      <nav>
+        <ol class="breadcrumb">
+          <% @breadcrumbs.flatten.each_with_index do |entry, i| %>
+            <% if i == @breadcrumbs.length - 1 %>
+              <li class="breadcrumb-item active"><%= entry[:name] %></li>
+            <% else %>
+              <li class="breadcrumb-item"><a href="<%= entry[:url] %>"><%= entry[:name] %></a></li>
+            <% end %>
+          <% end %>
+        </ol>
+      </nav>
+
+      <%= yield %>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha256-yNbKY1y6h2rbVcQtf0b8lq4a+xpktyFc3pSYoGAY1qQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js" integrity="sha256-FSEeC+c0OJh+0FI23EzpCWL3xGRSQnNkRGV2UF5maXs=" crossorigin="anonymous"></script>
+
+    <%= javascript_include_tag "application" %>
+
+    <%= yield :js %>
+
+    <% unless flash.empty? %>
+      <script id="toastr">
+        <% flash.each do |name, msg| %>
+          <% if msg.is_a?( String ) %>
+            setTimeout( function(){ toastr.<%= name == 'alert' ? 'error' : 'success' %>("<%=raw msg %>"); }, 0 );
+          <% elsif msg.is_a?( Array ) %>
+            <% msg.each do |m| %>
+              setTimeout( function(){ toastr.<%= name == 'alert' ? 'error' : 'success' %>("<%=raw m %>"); }, 0 );
+            <% end %>
+          <% end %>
+        <% end %>
+      </script>
+    <% end %>
+  </body>
+</html>

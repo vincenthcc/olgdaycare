@@ -1,0 +1,42 @@
+<h2>Daycare entry</h2>
+
+<%= form_for @entry, url: daycare_admin_entry_url( @entry ), method: :put do |f| %>
+  <div class="form-group row">
+    <%= f.label :student, class: 'col-md-2 col-form-label' %>
+    <div class="col-md-4">
+      <span class="form-control-plaintext"><%= @entry.student.full_name %></span>
+    </div>
+
+    <%= f.label :checkin_date, 'Payment date', class: 'col-md-2 col-form-label' %>
+    <div class="col-md-4">
+      <span class="form-control-plaintext"><%= @entry.checkin_date %></span>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <%= f.label :teacher, 'Payment recorded by', class: 'col-md-2 col-form-label' %>
+    <div class="col-md-4">
+      <span class="form-control-plaintext">
+        <% if @entry.teacher.present? %>
+          <%= @entry.teacher.full_name %>
+        <% else %>
+          <em>From before tracking started</em>
+        <% end %>
+      </span>
+    </div>
+
+    <%= f.label :total_time, 'Total payment', class: 'col-md-2 col-form-label' %>
+    <div class="col-md-2">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            $
+          </span>
+        </div>
+        <input class="form-control" type="text" value="<%= sprintf( "%0.2f", @entry.total_time * Current.daycare_per_hour * -1 ) %>" name="daycare_entry[total_time]" id="daycare_entry_total_time" />
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" name="payment" type="submit" value="1">Save payment</button>
+<% end %>

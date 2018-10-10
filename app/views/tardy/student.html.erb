@@ -1,0 +1,20 @@
+<a class="btn btn-success" href="/" id="home">Home</a>
+<h3>Student Tardy Sign In Log</h3>
+<h3>Grade <%= params[:grade] %> > <%= params[:letter] %> > <%= @student.full_name %></h3>
+<h4>Choose check-in type</h4>
+<div id="actions">
+  <a class="btn btn-primary" href="/tardy/<%= params[:grade] %>/<%= params[:letter] %>/<%= params[:student] %>/student">Student check-in</a>
+  <a class="btn btn-primary" href="/tardy/<%= params[:grade] %>/<%= params[:letter] %>/<%= params[:student] %>/parent">Parent check-in</a>
+</div>
+
+
+<% content_for :css do %>
+  <style>
+    #actions a {
+      display: block;
+      margin-bottom: 30px;
+      font-size: 4em;
+      white-space: normal;
+    }
+  </style>
+<% end %>

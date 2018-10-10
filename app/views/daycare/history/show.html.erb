@@ -1,0 +1,46 @@
+<h2>Daycare totals</h2>
+<h3>History for <%= @student.full_name %> - grade <%= @student.grade %></h3>
+
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Checked in</th>
+      <th>Checked out</th>
+      <th>Total hours</th>
+      <th>Checked out by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @history.each do |entry| %>
+      <%
+        is_payment = ( entry.checked_out_by == 'Payment' )
+      %>
+      <tr <% if is_payment %>class="table-success"<% end %>>
+        <td>
+          <% if is_payment %>
+            <%= entry.created_at.strftime( '%F %r' ) %>
+          <% else %>
+            <%= entry.checkin_date %>
+          <% end %>
+        </td>
+        <% if entry.checkin_time.nil? %>
+          <td></td>
+          <td></td>
+        <% else %>
+          <td><%= entry.checkin_time_display %></td>
+          <td><%= entry.checkout_time_display if entry.checkout_time.present? %></td>
+        <% end %>
+        <td>
+          <% if is_payment %>
+            $<%= format( '%.2f', ( entry.total_time * -1 * Current.daycare_per_hour ) ) %>
+            (<%= entry.total_time %>)
+          <% else %>
+            <%= entry.total_time %>
+          <% end %>
+        </td>
+        <td><%= entry.checked_out_by %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

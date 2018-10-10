@@ -1,0 +1,7 @@
+<h2>Daycare check in</h2>
+
+<div id="buttons">
+  <% @grades.each do |grade| %>
+    <a href="/teachers/daycare/<%= grade %>" class="btn btn-primary"><%= grade %></a>
+  <% end %>
+</div>

@@ -1,0 +1,54 @@
+<h2>Daycare totals</h2>
+<h3>for <%= @student.full_name %></h3>
+<h4>Current status</h4>
+<%= @current_due.abs.round( 2 ) %> hours
+<% if @current_due > 0 %>behind<% else %>ahead<% end %>
+( $<%= sprintf( "%0.2f", @current_due * Current.daycare_per_hour ) %> )
+
+<br/>
+<br />
+<br />
+<h3>Record payment</h3>
+<%= form_tag daycare_admin_payment_url( @student.student_id ), method: :put, class: 'form-horizontal' do %>
+  <div class="row">
+    <label class="control-label col-sm-2" for="amount">Amount paid</label>
+    <div class="col-sm-4 input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">$</span>
+      </div>
+      <input class="form-control" type="tel" value="" id="amount" name="amount" />
+      <div class="input-group-append">
+        <button class="btn btn-primary">Record</button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<br/>
+<br />
+<br />
+<h2>Previous payments</h2>
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>Paid on</th>
+      <th>Total hours</th>
+      <th class="text-right">Total $ paid</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @previous_payments.length == 0 %>
+      <tr>
+        <td colspan="3" class="empty_row">No payments</td>
+      </tr>
+    <% end %>
+    <% @previous_payments.each do |payment| %>
+      <tr>
+        <td><%= payment.created_at.strftime( "%F %r" ) %></td>
+        <td><%= 0 - payment.total_time %></td>
+        <td class="text-right">$<%= sprintf( "%0.2f", 0 - ( payment.total_time * Current.daycare_per_hour ) ) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

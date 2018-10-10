@@ -1,0 +1,69 @@
+<% @students.each do |student| %>
+  <% next if @totals[ student.id ].nil? %>
+  <div class="form">
+    <div class="name">Our Lady of Guadalupe Parish School</div>
+    <div class="title">Extended daycare</div>
+    <div class="text">
+      As of <%= Time.zone.now.strftime( '%F' ) %>, your child <%= student.full_name %>
+      in grade <%= student.grade %>, is negative <%= ( @totals[ student.id ] || 0 ).round( 2 ) %> hours.
+      <br />
+      The outstanding balance is $<%= sprintf( "%0.2f", ( @totals[ student.id ] || 0 ) * Current.daycare_per_hour ) %>
+    </div>
+
+    <div class="text"><em>Please send payment to the school office.</em></div>
+
+    <div class="reminder">
+      **As a friendly reminder the cost of extended care is $<%= sprintf( "%0.2f", Current.daycare_per_hour ) %>/per hour
+      <table>
+        <tr>
+          <td>&#x2756; 10 hours = $<%= sprintf( "%0.2f", 10 * Current.daycare_per_hour ) %></td>
+          <td>&#x2756; 15 hours = $<%= sprintf( "%0.2f", 15 * Current.daycare_per_hour ) %></td>
+          <td>&#x2756; 30 hours = $<%= sprintf( "%0.2f", 30 * Current.daycare_per_hour ) %></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="name">Thank you!</div>
+  </div>
+<% end %>
+
+<% content_for :css do %>
+  <link href="https://fonts.googleapis.com/css?family=Parisienne" rel="stylesheet">
+  <style>
+    .form {
+      border-bottom: 1px solid #000;
+      padding: 20px;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+    .form table {
+      margin: 0 auto 15px;
+      width: 100%;
+    }
+    .form td:first-child {
+      text-align: right;
+    }
+    .form td:last-child {
+      text-align: left;
+    }
+
+    .name {
+      font-family: 'Parisienne', cursive;
+      font-size: 200%;
+    }
+
+    .title {
+      font-size: 150%;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .text {
+      margin-bottom: 15px
+    }
+
+    .reminder {
+      font-size: 75%;
+    }
+  </style>
+<% end %>
